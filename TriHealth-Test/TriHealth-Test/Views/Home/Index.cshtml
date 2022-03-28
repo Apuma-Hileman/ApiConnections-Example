@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="text-center">
+    <h1 class="display-4">Test Submit Content</h1>
+    <div class="container">
+        @if (!string.IsNullOrWhiteSpace(ViewBag.Results))
+        {
+            <div class="row">
+                <div class="col-12">
+                    <h2>Data Submitted Successfully</h2>
+                </div>
+            </div>
+        }
+        <form id="submit" asp-controller="Home" asp-action="submit">
+            <div class="row">
+                <div class="col-12">
+                    <input type="text" id="FirstName" name="FirstName" value="John" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <input type="text" id="LastName" name="LastName" value="Doe" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <input type="text" id="Address" name="Address" value="2217 E. 9th Street, Suite 200" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <input type="text" id="City" name="City" value="Cleveland" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <input type="text" id="State" name="State" value="OH" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <input type="text" id="Zip" name="Zip" value="44115" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <input type="text" id="PhoneNumber" name="PhoneNumber" value="4405555555" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <input type="submit" value="Submit" id="btnSubmit" />
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log('@TempData["Url"]' + 'SubmitData');
+            $("#btnSubmit").click(function (e) {
+                e.preventDefault();
+                var utm = document.cookie; //This will need more clarification based on what's actually in the cookie
+                utm = 'utmcsr=utmcsrval|utmcmd=utmcmdval|utmccn=utmccnval|utmcct=utmcctval|utmctr=utmctrval'; //this line is for testing purposes onl;y
+                console.log('Attempting...');
+                $.ajax({
+                    url: '@TempData["Url"]' + 'SubmitData',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify( {
+                        FirstName: $('#FirstName').val(),
+                        LastName: $('#LastName').val(),
+                        City: $('#City').val(),
+                        State: $('#State').val(),
+                        Zip: $('#Zip').val(),
+                        PhoneNumber: $('#PhoneNumber').val(),
+                        UtmData: utm, 
+                    }),
+                    success: function (result) {
+                        console.log(result);
+                        $('#submit').submit();
+                    },
+                });
+            });
+        });
+    </script>
+}
